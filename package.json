@@ -1,0 +1,141 @@
+{
+    "name": "pdb",
+    "version": "0.0.1",
+    "type": "module",
+    "trustedDependencies": [
+        "@sveltejs/kit",
+        "better-sqlite3",
+        "esbuild",
+        "libwebview-nodejs",
+        "svelte-preprocess"
+    ],
+    "devDependencies": {
+        "@eslint/compat": "^1.2.3",
+        "@sveltejs/adapter-auto": "^3.0.0",
+        "@sveltejs/kit": "^2.9.0",
+        "@sveltejs/vite-plugin-svelte": "^5.0.0",
+        "@types/better-sqlite3": "^7.6.11",
+        "autoprefixer": "^10.4.20",
+        "drizzle-kit": "^0.30.0",
+        "eslint": "^9.7.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-svelte": "^2.36.0",
+        "globals": "^15.0.0",
+        "prettier": "^3.3.2",
+        "prettier-plugin-svelte": "^3.2.6",
+        "prettier-plugin-tailwindcss": "^0.6.5",
+        "svelte": "^5.0.0",
+        "svelte-check": "^4.0.0",
+        "tailwindcss": "^3.4.9",
+        "typescript": "^5.0.0",
+        "typescript-eslint": "^8.0.0",
+        "vite": "^6.0.0",
+        "vitest": "^2.0.4",
+        "wireit": "^0.14.9"
+    },
+    "dependencies": {
+        "better-sqlite3": "^11.1.2",
+        "drizzle-orm": "^0.38.0",
+        "svelte-ux": "^0.76.0",
+        "webview-nodejs": "^0.4.3",
+        "zod": "^3.23.8"
+    },
+    "scripts": {
+        "d": "vite dev",
+        "dev": "wireit",
+        "db:push": "drizzle-kit push",
+        "build": "vite build",
+        "preview": "vite preview",
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "wireit": {
+        "dev": {
+            "command": "node wv.js",
+            "service": true,
+            "files": [
+                "wv.js"
+            ],
+            "dependencies": [
+                {
+                    "script": "check",
+                    "cascade": false
+                },
+                {
+                    "script": "vite.dev",
+                    "cascade": false
+                }
+            ]
+        },
+        "check": {
+            "dependencies": [
+                "sveltecheck",
+                "format",
+                "lint"
+            ]
+        },
+        "tsc": {
+            "command": "tsc --build",
+            "clean": "if-file-deleted",
+            "files": [
+                "src/**/*.ts",
+                "src/**/*.tsx",
+                "tsconfig.json"
+            ],
+            "output": [
+                "tmp/**",
+                ".tsbuildinfo"
+            ]
+        },
+        "sveltecheck": {
+            "command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+            "files": [
+                "src"
+            ],
+            "output": []
+        },
+        "lint": {
+            "command": "eslint --cache .",
+            "files": [
+                "src/**/*.ts",
+                "src/**/*.tsx",
+                ".eslintrc.cjs"
+            ],
+            "output": []
+        },
+        "format": {
+            "command": "prettier --log-level warn --cache --write .",
+            "files": [
+                "src/**/*.ts",
+                "src/**/*.tsx",
+                ".prettierrc",
+                ".prettierignore"
+            ],
+            "output": []
+        },
+        "db:push": {
+            "command": "drizzle-kit push",
+            "files": [
+                "drizzle.config.ts",
+                "./src/lib/server/db/tables.ts"
+            ],
+            "output": []
+        },
+        "vite.dev": {
+            "command": "vite dev",
+            "service": {
+                "readyWhen": {
+                    "lineMatches": "to expose"
+                }
+            }
+        },
+        "vite.preview": {
+            "command": "vite build && vite preview",
+            "service": {
+                "readyWhen": {
+                    "lineMatches": "to expose"
+                }
+            }
+        }
+    }
+}
