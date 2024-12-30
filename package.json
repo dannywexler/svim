@@ -16,7 +16,8 @@
         "@sveltejs/vite-plugin-svelte": "^5.0.0",
         "@types/better-sqlite3": "^7.6.11",
         "autoprefixer": "^10.4.20",
-        "drizzle-kit": "^0.30.0",
+        "bun": "^1.1.42",
+        "drizzle-kit": "^0.30.1",
         "eslint": "^9.7.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-svelte": "^2.36.0",
@@ -35,10 +36,14 @@
     },
     "dependencies": {
         "better-sqlite3": "^11.1.2",
-        "drizzle-orm": "^0.38.0",
+        "drizzle-orm": "^0.38.3",
+        "fluent-file": "link:fluent-file",
+        "fluent-ms": "link:fluent-ms",
+        "neverthrow": "^8.1.1",
+        "simple-git": "^3.27.0",
         "svelte-ux": "^0.76.0",
         "webview-nodejs": "^0.4.3",
-        "zod": "^3.23.8"
+        "zod": "^3.24.1"
     },
     "scripts": {
         "d": "vite dev",
@@ -50,6 +55,17 @@
         "test:watch": "vitest"
     },
     "wireit": {
+        "clone": {
+            "command": "bun ./src/collect/clone.ts",
+            "files": ["./src/collect/clone.ts"],
+            "output": ["./src/repos"]
+        },
+        "pull": {
+            "command": "bun ./src/collect/pull.ts",
+            "dependencies": ["clone"],
+            "files": ["./src/collect/pull.ts"],
+            "output": ["./src/repos"]
+        },
         "dev": {
             "command": "node wv.js",
             "service": true,
@@ -79,7 +95,6 @@
             "clean": "if-file-deleted",
             "files": [
                 "src/**/*.ts",
-                "src/**/*.tsx",
                 "tsconfig.json"
             ],
             "output": [
@@ -90,7 +105,9 @@
         "sveltecheck": {
             "command": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
             "files": [
-                "src"
+                "src/**/*.{ts,svelte}",
+                "svelte.config.js",
+                "tsconfig.json"
             ],
             "output": []
         },
@@ -98,7 +115,6 @@
             "command": "eslint --cache .",
             "files": [
                 "src/**/*.ts",
-                "src/**/*.tsx",
                 ".eslintrc.cjs"
             ],
             "output": []
@@ -107,7 +123,6 @@
             "command": "prettier --log-level warn --cache --write .",
             "files": [
                 "src/**/*.ts",
-                "src/**/*.tsx",
                 ".prettierrc",
                 ".prettierignore"
             ],
