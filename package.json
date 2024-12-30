@@ -43,6 +43,8 @@
         "simple-git": "^3.27.0",
         "svelte-ux": "^0.76.0",
         "webview-nodejs": "^0.4.3",
+        "wretch": "^2.11.0",
+        "znv": "^0.4.0",
         "zod": "^3.24.1",
         "zodregex": "^0.1.1"
     },

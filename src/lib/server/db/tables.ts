@@ -26,6 +26,7 @@ export const PluginsTable = sqliteTable("plugins", {
     createdOn: millis().notNull(),
     dependencies: string_array(),
     description: text().notNull(),
+    writtenIn: text().notNull(),
     event: string_array(),
     ft: string_array(),
     name: text().notNull(),
